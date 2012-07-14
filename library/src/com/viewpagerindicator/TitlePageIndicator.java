@@ -17,25 +17,21 @@
  */
 package com.viewpagerindicator;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.Typeface;
+import android.graphics.*;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+
+import java.util.ArrayList;
 
 /**
  * A TitlePageIndicator is a PageIndicator which displays the title of left view
@@ -96,7 +92,6 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
     private ViewPager mViewPager;
     private ViewPager.OnPageChangeListener mListener;
-    private PagerAdapter mPagerAdapter;
     private int mCurrentPage = -1;
     private float mPageOffset;
     private int mScrollState;
@@ -647,8 +642,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
         if (mViewPager != null) {
             mViewPager.setOnPageChangeListener(null);
         }
-        mPagerAdapter = view.getAdapter();
-        if (mPagerAdapter == null) {
+
+        if (view.getAdapter() == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
         mViewPager = view;
@@ -796,10 +791,15 @@ public class TitlePageIndicator extends View implements PageIndicator {
     }
 
     private CharSequence getTitle(int i) {
-        CharSequence title = mPagerAdapter.getPageTitle(i);
+		CharSequence title = null;
+		if(mViewPager != null && mViewPager.getAdapter() != null) {
+			title = mViewPager.getAdapter().getPageTitle(i);
+		}
+
         if (title == null) {
             title = EMPTY_TITLE;
         }
+
         return title.toString();
     }
 }
